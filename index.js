@@ -63,38 +63,33 @@ let participantes = [
 ];
 
 const criarNovoParticipante = (participante) => {
-  const dataInscricao = dayjs(Date.now())
-  .to(participante.dataInscricao)
-  
-   let dataCheckIn = dayjs(Date.now())
-  .to(participante.dataCheckIn)
+  const dataInscricao = dayjs(Date.now()).to(participante.dataInscricao)
 
-  if(participante.dataCheckIn == null) {
+  let dataCheckIn = ''
+  if(participante.dataCheckIn) {
+    dataCheckIn = dayjs(participante.dataCheckIn).fromNow()
+  } else {
     dataCheckIn = `
-    <button 
-    data-email="${participante.email}"
-    onclick="fazerCheckIn(event)">
-      Confirmar check-in
-    </button>
+      <button 
+        data-email="${participante.email}"
+        onclick="fazerCheckIn(event)">
+        Confirmar check-in
+      </button>
     `
   }
 
   return `
-  <tr>
+    <tr>
       <td>
-        <strong>
-          ${participante.nome}
-          </strong>
-          <br>
-          <small>
-            ${participante.email}
-          </small>
+        <strong>${participante.nome}</strong><br>
+        <small>${participante.email}</small>
       </td>
       <td>${dataInscricao}</td>
       <td>${dataCheckIn}</td>
     </tr>
-    `
+  `
 }
+
 
 const atualizarLista = (participantes) => {
   let output = ""
@@ -141,20 +136,20 @@ const adicionarParticipante  = (event) => {
 }
 
 const fazerCheckIn = (event) => {
-  // confirmar se realmente quer o check-in~
+  // Confirmar se realmente quer o check-in
   const mensagemConfirmacao = 'Tem certeza que deseja fazer o check-in?'
-  if(confirm(mensagemConfirmacao) == false) {
+  if (confirm(mensagemConfirmacao) == false) {
     return 
   }
 
-  alert(resultado)
-
-  // encontrar o participante dentro da lista
+  // Encontrar o participante dentro da lista
   const participante = participantes.find((p) => {
     return p.email == event.target.dataset.email
   })
-  // atualizar o check-in do participante
+
+  // Atualizar o check-in do participante
   participante.dataCheckIn = new Date()
-  // atualizar a lista de participantes
+
+  // Atualizar a lista de participantes
   atualizarLista(participantes)
 }
